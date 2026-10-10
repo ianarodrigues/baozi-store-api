@@ -2,11 +2,10 @@
 
 API REST da **Baozi Store**, uma pequena loja de pãozinho chinês, para controle básico de **clientes**, **produtos** e **pedidos**.
 
-Trabalho prático da disciplina **Desenvolvimento Web Back-End** (UNINTER) — Profa. Luciane Kanashiro, Me.
 
 ![Java](https://img.shields.io/badge/Java-25-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.9-brightgreen)
-![Banco](https://img.shields.io/badge/Banco-H2%20%7C%20MySQL-blue)
+![Banco](https://img.shields.io/badge/Banco-H2%20%2F%20MySQL-blue)
 
 ## Sumário
 
@@ -19,7 +18,7 @@ Trabalho prático da disciplina **Desenvolvimento Web Back-End** (UNINTER) — P
 - [Exemplos de uso](#exemplos-de-uso)
 - [Regras de negócio e códigos de resposta](#regras-de-negócio-e-códigos-de-resposta)
 - [Testes com Postman](#testes-com-postman)
-- [Autor(a)](#autora)
+- [Autora](#autora)
 
 ## Tecnologias
 
@@ -99,12 +98,13 @@ src/main/java/br/com/baozistore
 
 - JDK 25 (ou 17+, ajustando `java.version` no `pom.xml`)
 - Maven 3.9+ (ou o Maven embutido na sua IDE)
+- MySQL 8+ *(somente se for usar o perfil opcional `mysql`)*
 
 ### Pela linha de comando
 
+Clone o repositório, entre na pasta `baozi-store-api` e execute:
+
 ```bash
-git clone https://github.com/SEU-USUARIO/baozi-store-api.git
-cd baozi-store-api
 mvn spring-boot:run
 ```
 
@@ -117,7 +117,9 @@ Quando o console mostrar `Started BaoziStoreApplication`, a API estará em **htt
 
 ### Banco de dados
 
-**H2 (padrão)** — não precisa instalar nada. Os dados ficam no arquivo `data/baozidb` e persistem entre execuções.
+O projeto funciona com **H2** por padrão e aceita **MySQL** como opção, selecionada por perfil do Spring.
+
+**H2 (padrão)** — não precisa instalar nada. Os dados ficam em `data/baozidb` e persistem entre execuções.
 Console web: http://localhost:8080/h2-console
 
 | Campo | Valor |
@@ -128,13 +130,28 @@ Console web: http://localhost:8080/h2-console
 
 **MySQL (opcional)**
 
-1. Crie o schema: `CREATE DATABASE baozi_store;`
+1. Crie o schema no MySQL:
+
+   ```sql
+   CREATE DATABASE baozi_store;
+   ```
+
 2. Ajuste usuário e senha em `src/main/resources/application-mysql.properties`.
 3. Execute com o perfil `mysql`:
 
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=mysql
-```
+   - **Linha de comando:**
+
+     ```bash
+     mvn spring-boot:run -Dspring-boot.run.profiles=mysql
+     ```
+
+   - **Eclipse:** em **Run → Run Configurations...**, selecione `BaoziStoreApplication`, abra a aba **Arguments** e, em **VM arguments**, informe:
+
+     ```
+     -Dspring.profiles.active=mysql
+     ```
+
+As tabelas `cliente`, `produto` e `pedido` são criadas automaticamente pelo Hibernate nos dois bancos.
 
 ## Endpoints
 
@@ -225,18 +242,13 @@ Para apagar um cliente ou produto que já foi usado, apague antes os pedidos rel
 
 ## Testes com Postman
 
-Sugestão de roteiro, com o banco vazio (os ids começam em 1):
+Roteiro de testes, com o banco vazio (os ids começam em 1):
 
 1. `POST /clientes`, `POST /produtos` e `POST /pedidos`
 2. `GET /clientes`, `GET /produtos` e `GET /pedidos`
 3. `GET /clientes/1`, `GET /produtos/1` e `GET /pedidos/1`
 4. Criar um segundo cliente, produto e pedido (id 2) e apagar com `DELETE /pedidos/2`, `DELETE /clientes/2` e `DELETE /produtos/2`, nessa ordem
 
-A pasta [`postman/`](postman) contém uma coleção pronta (`BaoziStore.postman_collection.json`) para importar.
-A pasta [`documento/`](documento) contém o diagrama de caso de uso e o gerador do PDF de entrega.
+## Autora
 
-## Autor(a)
-
-**Seu Nome** — RU 123456
-Curso — UNINTER
-Professora: Luciane Kanashiro, Me.
+**Iana Rodrigues**
